@@ -1,0 +1,29 @@
+<script defer src="jquery-3.4.1.min.js"></script>
+<script defer src="face-api.min.js"></script>
+<script defer src="script.js"></script>
+
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    canvas {
+      position: absolute;
+    }
+
+    #inputVideo {
+      background-color: #666;
+    }
+
+  </style>
+
+<div style="position: relative" class="margin">
+    <video onplay="onPlay(this)" id="inputVideo" autoplay muted></video>
+    <!-- <canvas id="overlay" /> -->
+</div>
