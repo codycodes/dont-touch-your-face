@@ -1,8 +1,14 @@
-<script defer src="jquery-3.4.1.min.js"></script>
-<script defer src="face-api.min.js"></script>
-<script defer src="script.js"></script>
-
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script defer src="face-api.min.js"></script>
+  <script defer src="./clippyjs/build/clippy.min.js"></script>
+  <script defer src="script.js"></script>
+  <style>
     body {
       margin: 0;
       padding: 0;
@@ -16,14 +22,9 @@
     canvas {
       position: absolute;
     }
-
-    #inputVideo {
-      background-color: #666;
-    }
-
   </style>
-
-<div style="position: relative" class="margin">
-    <video onplay="onPlay(this)" id="inputVideo" autoplay muted></video>
-    <!-- <canvas id="overlay" /> -->
-</div>
+</head>
+<body>
+<video id="video" width="720" height="560" autoplay muted></video>
+</body>
+</html>
