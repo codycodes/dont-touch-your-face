@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Clippy Bot</title>
   <script defer src="face-api.min.js"></script>
   <script defer src="./clippyjs/build/clippy.min.js"></script>
+  <script src="jquery-3.4.1.min.js"></script>
   <script defer src="script.js"></script>
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       width: 100vw;
@@ -22,9 +23,110 @@
     canvas {
       position: absolute;
     }
+    video {
+    min-height: 100%;
+    min-width: 100%;
+    height: auto;
+    width: auto;
+    align-items: center;
+    }
+    div {
+    position: absolute;
+    content:"";
+    border-radius: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    }
+
+    img {
+    position: absolute;
+    content:"";
+    border-radius: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    visibility: hidden;
+    /* max-width: 50%;
+    height: auto; */
+    }
+
+    
+    body {
+        overflow: hidden;
+    }
+
+
+
+    .clippy, .clippy-balloon {
+    position: fixed;
+    z-index: 1000;
+    cursor: pointer;
+    }
+
+    .clippy-balloon {
+
+        background: #FFC;
+        color: black;
+        padding: 8px;
+        height: 40px;
+        width: 200px;
+        border: 1px solid black;
+        border-radius: 5px;
+        
+    }
+
+    .clippy-content {
+        max-width: 200px;
+        min-width: 120px;
+        font-family: "Microsoft Sans", sans-serif;
+        font-size: 10pt;
+    }
+
+    .clippy-tip {
+        width: 10px;
+        height: 16px;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAgCAMAAAAlvKiEAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRF///MAAAA////52QwgAAAAAN0Uk5T//8A18oNQQAAAGxJREFUeNqs0kEOwCAIRFHn3//QTUU6xMyyxii+jQosrTPkyPEM6IN3FtzIRk1U4dFeKWQiH6pRRowMVKEmvronEynkwj0uZJgR22+YLopPSo9P34wJSamLSU7lSIWLJU7NkNomNlhqxUeAAQC+TQLZyEuJBwAAAABJRU5ErkJggg==) no-repeat;
+        position: absolute;
+    }
+
+    .clippy-top-left .clippy-tip {
+        top: 100%;
+        margin-top: 0px;
+        left: 100%;
+        margin-left: -100px;
+    }
+
+    .clippy-top-right .clippy-tip {
+        top: 100%;
+        margin-top: 0px;
+        left: 0;
+        margin-left: 100px;
+        background-position: -10px 0;
+
+    }
+
+    .clippy-bottom-right .clippy-tip {
+        top: 0;
+        margin-top: -16px;
+        left: 0;
+        margin-left: 100px;
+        background-position: -10px -16px;
+    }
+
+    .clippy-bottom-left .clippy-tip {
+        top: 0;
+        margin-top: -16px;
+        left: 100%;
+        margin-left: -100px;
+        background-position: 0px -16px;
+    }
   </style>
 </head>
 <body>
-<video id="video" width="720" height="560" autoplay muted></video>
+
+<video id="video" autoplay muted></video>
+<img id="bulb_off" src="./assets/bulb_off.gif">
+<img id="bulb_on" src="./assets/bulb_on.gif">
 </body>
 </html>
