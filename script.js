@@ -322,7 +322,7 @@ function loadLabeledImages() {
   return Promise.all(
     labels.map(async label => {
       const descriptions = [] 
-      const imgUrl = `/labeled_images/codes/${label}.jpg`
+      const imgUrl = `/clippy-smart-home/labeled_images/codes/${label}.jpg`
       const img = await faceapi.fetchImage(imgUrl)    
       const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
       descriptions.push(detections.descriptor)
