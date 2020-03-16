@@ -147,7 +147,6 @@ video.addEventListener('play', async () => {
         results.forEach((result, i) => {
           const box = resizedDetections[i].detection.box
           gestureToUser(box, agent)
-          ctx.drawImage(img, box.x + (box.width - img.width) / 2, box.y - img.height);
           const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
           drawBox.draw(canvas)
         })
@@ -209,14 +208,6 @@ video.addEventListener('play', async () => {
 // 40: "RestPose"
 // 41: "IdleEyeBrowRaise"
 // 42: "LookDownLeft"
-function lightbulbState(bulbOn) {
-  if (bulbOn) {
-    var img = document.getElementById("bulb_on");
-  } else {
-    var img = document.getElementById("bulb_off");
-  }
-  return img
-}
 
 function loadLabeledImages() {
   const labels = ['codes']
