@@ -9,39 +9,6 @@ const labels = ['codes']
 var setupUser = ''
 var name = ''
 
-var grammar =
-  "#JSGF V1.0; grammar emar; public <greeting> = hello | hi; <person> = codes | alisa;";
-var recognition = new window.webkitSpeechRecognition();
-var speechRecognitionList = new window.webkitSpeechGrammarList();
-speechRecognitionList.addFromString(grammar, 1);
-recognition.grammars = speechRecognitionList;
-recognition.continuous = true;
-recognition.lang = "en-US";
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
-
-recognition.start();
-
-
-recognition.onresult = processSpeech;
-recognition.onend = recognitionEnded;
-
-function processSpeech(event) {
-  speechInputReady = false;
-  transcript = event.results[0][0].transcript.toLowerCase().split(' ');
-  console.log('speech processing...' + transcript)
-  recognition.stop();
-}
-
-function recognitionEnded() {
-  // start the recognition again for the next input
-  setTimeout(function() {
-    // only serves to delay so we can track the state of speech recognition for user interaction
-  }, 500)
-  speechInputReady = true;
-  recognition.start();
-}
-
 clippy.load('Clippy', function(agent){
   agent.show()
   agent.moveTo($(window).width()/2, $(window).height()/2)
@@ -55,11 +22,16 @@ clippy.load('Clippy', function(agent){
 
 async function loadNetworks(){
   Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('/clippy-smart-home/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('/clippy-smart-home/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('/clippy-smart-home/models'),
-    faceapi.nets.faceExpressionNet.loadFromUri('/clippy-smart-home/models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('/clippy-smart-home/models')
+    // faceapi.nets.tinyFaceDetector.loadFromUri('/clippy-smart-home/models'),
+    // faceapi.nets.faceLandmark68Net.loadFromUri('/clippy-smart-home/models'),
+    // faceapi.nets.faceRecognitionNet.loadFromUri('/clippy-smart-home/models'),
+    // faceapi.nets.faceExpressionNet.loadFromUri('/clippy-smart-home/models'),
+    // faceapi.nets.ssdMobilenetv1.loadFromUri('/clippy-smart-home/models')
+    faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('./models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('./models'),
+    faceapi.nets.faceExpressionNet.loadFromUri('./models'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('./models')
   ]).then(startVideo)
 }
 
@@ -174,14 +146,6 @@ video.addEventListener('play', async () => {
         const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
         results.forEach((result, i) => {
           const box = resizedDetections[i].detection.box
-          // Draw lightbulb
-          name = result.toString().split(' ')[0]
-          let img = ''
-          if (name == setupUser && setupLight) {
-            img = lightbulbState(true)
-          } else {
-            img = lightbulbState(false)
-          }
           gestureToUser(box, agent)
           ctx.drawImage(img, box.x + (box.width - img.width) / 2, box.y - img.height);
           const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
@@ -189,74 +153,11 @@ video.addEventListener('play', async () => {
         })
       }, 125)}, 5000)
 
-      // setInterval(async () => {
-      //   agent.animate();
-      //   // agent.speak('hello, world! how are you doing today? I am good!');
-      // }, 10000)
       setInterval(async () => {
         x = getRandomInt(0, $(window).width() - 150)
         y = getRandomInt(0, $(window).height() - 150)
         agent.moveTo(x, y);
       }, 15000)
-      setInterval(async() => {
-        if (transcript) {
-          agent.play('Alert')
-          if (transcript.includes('clippy')) {
-            if (transcript.includes('light')) {
-              setupMode = true;
-              if (setupLight) {
-                console.log('TOGGLING LIGHT')
-              } else {
-                let promise = new Promise(function(resolve) {
-                  agent.speak('It looks like you\'d like to turn on a light. Would you like me to help you with that?')
-                  let waitForResponse = setInterval(function() {
-                    if (!speechInputReady) {
-                      agent.speak('Great! Please tell me about your light: I have over four trillion different API integrations on hand to help! Just kidding!')
-                      resolve();
-                      clearInterval(waitForResponse)
-                    }
-                  }, 150)
-                }).then(function(resolve) {
-                  let promise = new Promise(function(resolve) {
-                    let waitForResponse = setInterval(function() {
-                      if (!speechInputReady) {
-                        agent.speak('The trigger will be: When I recognize your user as ' + name + ' and the action will be: turn the light on above your head. Is this the rule you’d like?')
-                        setupUser = name;
-                        resolve();
-                        clearInterval(waitForResponse)
-                      }
-                  }, 150)
-                 }).then(function(resolve) {
-                  let promise = new Promise(function(resolve) {
-                    let waitForResponse = setInterval(function() {
-                      if (!speechInputReady) {
-                        agent.speak('Great, I\'ve configured your rule!')
-                        setupMode = false;
-                        setupLight = true;
-                        clearInterval(waitForResponse)
-                      }
-                    }, 150)
-                 }).then(function(resolve) {
-                setupMode = false;
-                setupLight = true;
-              })
-            })
-          });
-                // }, 3000)
-                // waitForResponse = setInterval(function() {
-                //   if (!speechInputReady) {
-                //     clearInterval(waitForResponse)
-                //   }
-                // }, 250)
-              }
-            }
-          } else if (!setupMode) {
-            agent.speak('I heard you say: ' + transcript.join(' '))
-          }
-          // console.log(agent.animations())
-        }
-        transcript = '';
-      }, 500)
     })
   })
 
@@ -322,7 +223,8 @@ function loadLabeledImages() {
   return Promise.all(
     labels.map(async label => {
       const descriptions = [] 
-      const imgUrl = `/clippy-smart-home/labeled_images/codes/${label}.jpg`
+      const imgUrl = `./labeled_images/codes/${label}.jpg`
+      // const imgUrl = `/clippy-smart-home/labeled_images/codes/${label}.jpg`
       const img = await faceapi.fetchImage(imgUrl)    
       const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
       descriptions.push(detections.descriptor)
