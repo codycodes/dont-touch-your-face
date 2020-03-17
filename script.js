@@ -23,7 +23,8 @@ const AREA_INTERSECTION_THRESHOLD = .15;
     // faceapi.nets.faceExpressionNet.loadFromUri('/clippy-smart-home/models'),
     // faceapi.nets.ssdMobilenetv1.loadFromUri('/clippy-smart-home/models')
     
-    faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
+    // faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
+    faceapi.nets.tinyFaceDetector.loadFromUri('/dont-touch-your-face/models'),
     // faceapi.nets.faceLandmark68Net.loadFromUri('./models'),
     // faceapi.nets.faceRecognitionNet.loadFromUri('./models'),
     // faceapi.nets.faceExpressionNet.loadFromUri('./models')
